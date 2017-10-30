@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/">
+        <file>main.qml</file>
+        <file>images/add.png</file>
+        <file>images/filter.png</file>
+        <file>images/sort.png</file>
+        <file>images/find.png</file>
+    </qresource>
+</RCC>
