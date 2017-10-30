@@ -2,7 +2,8 @@ import QtQuick 2.7
 import QtQuick.Window 2.2
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
-import MyData 1.0
+
+import ListModel 1.0                //C++写的model, 1.0是在main函数里注册到Qml时写的版本号
 
 Window {
     visible: true
@@ -35,8 +36,8 @@ Window {
             iconSource:{ source:"qrc:/images/add.png"}//指定按钮图标
 
             onClicked: {
-                console.log("添加")
-                modelValue.additem("new item");
+                console.log("添加:",listContent.currentIndex)
+                modelValue.additem(listContent.currentIndex, "new item");
             }
         }
 
@@ -45,7 +46,6 @@ Window {
             anchors.top: idHeader.top
             anchors.topMargin: 5
             anchors.left: addRec.right
-//            anchors.leftMargin: 3
             width: 35
             height: 35
             checkable: false
@@ -63,7 +63,6 @@ Window {
             id:filterRec
             anchors.top: idHeader.top
             anchors.left: sort.right
-//            anchors.leftMargin: 10
 
             width: 120
             height: 45
@@ -204,10 +203,10 @@ Window {
                 Text {
                     id: idText
                     width: 45
-                    text: itemNum
+                    text: itemNum       //对应model里的角色是行号
                     font.pointSize: 15
-                    font.bold: index==rowNum.currentIndex ? true : false
-                    color: index==rowNum.currentIndex ? "#EE0000" : "black"
+                    font.bold: index == rowNum.currentIndex ? true : false
+                    color: index == rowNum.currentIndex ? "#EE0000" : "black"
 
                     verticalAlignment: Text.AlignVCenter
                     horizontalAlignment: Text.AlignRight
@@ -238,15 +237,15 @@ Window {
                 width: listContent.width
                 height: 25
 
-                color: /*ListView.isCurrentItem?"#157efb":*/index%2==0?"#EEE8AA":"#CDCDB4"
+                color: index % 2 == 0 ? "#EEE8AA" : "#CDCDB4"
 
                 TextInput{
                     id:listText
                     width: listContent.width
                     height: 25
-                    text: itemValue
+                    text: itemValue             //对应model里的角色是数据
                     font.pointSize: 15
-                    font.bold: index==listContent.currentIndex ? true : false
+                    font.bold: index == listContent.currentIndex ? true : false
                     focus: true
                     z:10
                     horizontalAlignment: TextInput.AlignHCenter

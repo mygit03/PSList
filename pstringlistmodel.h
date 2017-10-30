@@ -34,8 +34,13 @@ public:
         }
         return QString("");
     }
-    Q_INVOKABLE void additem(QString &str){
-//        m_modelList.append(str);
+
+    Q_INVOKABLE void additem(int row, QString str){
+        ModelData tmpData;
+        tmpData.rowId = row;
+        tmpData.value = str;
+
+        m_modelList.append(tmpData);
     }
 
     Q_INVOKABLE void removeRow(int row){
