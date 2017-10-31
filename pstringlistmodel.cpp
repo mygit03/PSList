@@ -4,8 +4,8 @@ PStringListModel::PStringListModel(QObject *parent):QStringListModel(parent)
 {
     ModelData tmp;
     for(int i = 0; i < 20; ++i){
-        tmp.rowId = i;
-        tmp.value = QString("Item%1").arg(i);
+        tmp.rowId = i + 1;
+        tmp.value = QString("Item%1").arg(i + 1);
         m_modelList.append(tmp);
     }
 }

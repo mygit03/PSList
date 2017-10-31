@@ -27,14 +27,6 @@ public:
     virtual int rowCount(const QModelIndex &parent) const;
     virtual QHash<int, QByteArray> roleNames() const;
 
-    Q_INVOKABLE QString rdata(int row)
-    {
-        if(stringList().size()>row){
-            return stringList().at(row);
-        }
-        return QString("");
-    }
-
     Q_INVOKABLE void additem(int row, QString str){
         ModelData tmpData;
         tmpData.rowId = row;

@@ -5,5 +5,8 @@
         <file>images/filter.png</file>
         <file>images/sort.png</file>
         <file>images/find.png</file>
+        <file>images/copy.png</file>
+        <file>images/paste.png</file>
+        <file>images/del.png</file>
     </qresource>
 </RCC>

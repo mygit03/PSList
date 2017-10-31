@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Window 2.2
+import QtQuick.Dialogs 1.1
 import QtQuick.Controls 1.4
 import QtQuick.Controls.Styles 1.4
 
@@ -266,7 +267,18 @@ Window {
                     }
                 }
                 MouseArea{
+                    id:mouseArea
                     anchors.fill: parent
+
+                    //响应右键 实现右键菜单
+                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                    onPressed: {
+                        console.log("onPressed", mouse.button);
+                        if(mouse.button == Qt.RightButton){
+                            console.log("MouseArea RightButton");
+                            menuState.popup()       //显示右键菜单
+                        }
+                    }
 
                     onClicked: {
                         console.log("click:",index,listContent.currentIndex)
@@ -275,11 +287,64 @@ Window {
                             rowNum.currentIndex = index;
                         }
                     }
-                    onScrollGestureEnabledChanged: {
-                        rowNum.y = listContent.y
+                }
+                //菜单
+                Menu {
+                    id: menuState;
+                    MenuItem{
+                        text: "插入";
+                        iconName: "add";
+                        iconSource: "qrc:/images/add.png";
+                        shortcut: StandardKey.New
+                        onTriggered: {
+                            console.log("right add")
+                            modelValue.additem(listContent.currentIndex,"new item")
+                        }
+                    }
+                    MenuItem{
+                        text: "删除";
+                        iconName: "del";
+                        iconSource: "qrc:/images/del.png";
+                        shortcut: StandardKey.Delete
+                        onTriggered: {
+                            console.log("right delete")
+                            msgBoxDel.open()        //调用对话框
+                        }
+                    }
+                    MenuItem{
+                        text: "复制";
+                        iconName: "copy";
+                        iconSource: "qrc:/images/copy.png";
+                        shortcut: StandardKey.Copy
+                        onTriggered: {
+                            console.log("right copy")
+                        }
+                    }
+                    MenuItem{
+                        text: "粘贴";
+                        iconName: "paste";
+                        iconSource: "qrc:/images/paste.png";
+                        shortcut: StandardKey.Paste
+                        onTriggered: {
+                            console.log("right paste")
+                        }
                     }
                 }
             }
+        }
+    }
+
+    //警告对话框
+    MessageDialog
+    {
+        id:msgBoxDel
+        standardButtons: StandardButton.Yes | StandardButton.No
+        modality: Qt.ApplicationModal
+        title: qsTr("警告：")
+        text: qsTr("确定要删除当前记录？")
+        onYes:
+        {
+            modelValue.removeRow(listContent.currentIndex)
         }
     }
 }
