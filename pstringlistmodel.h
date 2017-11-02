@@ -27,44 +27,21 @@ public:
     virtual int rowCount(const QModelIndex &parent) const;
     virtual QHash<int, QByteArray> roleNames() const;
 
-    Q_INVOKABLE void additem(int row, QString str){
-        ModelData tmpData;
-        tmpData.rowId = row;
-        tmpData.value = str;
+    Q_INVOKABLE void additem(int row, QString str);
 
-        beginResetModel();
-        m_modelList.append(tmpData);
-        endResetModel();
-    }
+    Q_INVOKABLE void removeRow(int row);
 
-    Q_INVOKABLE void removeRow(int row){
-        beginResetModel();
-        m_modelList.removeAt(row);
-        endResetModel();
-    }
+    Q_INVOKABLE void pasteItem(int row, QString str);
 
-    Q_INVOKABLE void pasteItem(int row, QString str){
-        ModelData tmpData;
-        tmpData.rowId = row;
-        tmpData.value = str;
+    Q_INVOKABLE void modifyItem(int row, QString str);
 
-        beginResetModel();
-        m_modelList.insert(row, tmpData);
-        endResetModel();
-    }
+    Q_INVOKABLE void findItem(QString str);
 
-    Q_INVOKABLE void modifyItem(int row, QString str){
-        ModelData tmpData;
-        tmpData.rowId = row;
-        tmpData.value = str;
-
-        beginResetModel();
-        m_modelList.replace(row, tmpData);
-        endResetModel();
-    }
+    Q_INVOKABLE void sortItem();
 
 
     QList<ModelData> m_modelList;
+    QList<ModelData> tmpModelList;
 };
 
 #endif // PSTRINGLISTMODEL_H

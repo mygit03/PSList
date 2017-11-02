@@ -60,7 +60,7 @@ Window {
 
             onClicked: {
                 console.log("排序")
-                modelValue.removeRow(listContent.currentIndex)
+                modelValue.sortItem();
             }
         }
 
@@ -160,6 +160,7 @@ Window {
 
             onClicked: {
                 console.log("查找",findText.text)
+                modelValue.findItem(findText.text)
             }
         }
         Text {
