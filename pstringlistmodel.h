@@ -32,12 +32,37 @@ public:
         tmpData.rowId = row;
         tmpData.value = str;
 
+        beginResetModel();
         m_modelList.append(tmpData);
+        endResetModel();
     }
 
     Q_INVOKABLE void removeRow(int row){
+        beginResetModel();
         m_modelList.removeAt(row);
+        endResetModel();
     }
+
+    Q_INVOKABLE void pasteItem(int row, QString str){
+        ModelData tmpData;
+        tmpData.rowId = row;
+        tmpData.value = str;
+
+        beginResetModel();
+        m_modelList.insert(row, tmpData);
+        endResetModel();
+    }
+
+    Q_INVOKABLE void modifyItem(int row, QString str){
+        ModelData tmpData;
+        tmpData.rowId = row;
+        tmpData.value = str;
+
+        beginResetModel();
+        m_modelList.replace(row, tmpData);
+        endResetModel();
+    }
+
 
     QList<ModelData> m_modelList;
 };

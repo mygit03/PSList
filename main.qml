@@ -12,6 +12,8 @@ Window {
     height: 480
     title: qsTr("列表组件")
 
+    property var copyStr
+
     Rectangle{
         id:containerRec
         anchors.fill: parent
@@ -37,8 +39,10 @@ Window {
             iconSource:{ source:"qrc:/images/add.png"}//指定按钮图标
 
             onClicked: {
-                console.log("添加:",listContent.currentIndex)
-                modelValue.additem(listContent.currentIndex, "new item");
+                console.log("添加:",listContent.count)
+                modelValue.additem(listContent.count+1, "new item");
+                listContent.currentIndex = listContent.count-1
+                rowNum.currentIndex = listContent.count-1
             }
         }
 
@@ -136,6 +140,7 @@ Window {
                 id:findText
                 anchors.fill: parent
                 font.pointSize: 10
+                selectByMouse: true
                 horizontalAlignment: Text.AlignHCenter
                 verticalAlignment: Text.AlignVCenter
                 text: qsTr("Enter the text...")
@@ -224,6 +229,21 @@ Window {
             }
         }
 
+        Component {
+            id: sectionHeading
+            Rectangle {
+                width: listContent.width
+                height: 25
+                color: "lightsteelblue"
+
+                Text {
+                    text: section
+                    font.bold: true
+                    font.pixelSize: 20
+                }
+            }
+        }
+
         //列表整体
         ListView{
             id:listContent
@@ -232,19 +252,24 @@ Window {
             anchors.left: rowNum.right
             anchors.right: listRec.right
             currentIndex: 0
+            section.property: "size"
+            section.criteria: ViewSection.FullString
+            section.delegate: sectionHeading
 
             model: modelValue
             delegate: Rectangle{
                 width: listContent.width
                 height: 25
 
-                color: index % 2 == 0 ? "#EEE8AA" : "#CDCDB4"
+                color: listContent.currentIndex == index ? "blue" : (index % 2 == 0 ? "#EEE8AA" : "#CDCDB4")
 
                 TextInput{
                     id:listText
                     width: listContent.width
                     height: 25
+                    selectByMouse: true         //可以选择文本
                     text: itemValue             //对应model里的角色是数据
+                    color: listContent.currentIndex == index ? "#DAA520" : "black"
                     font.pointSize: 15
                     font.bold: index == listContent.currentIndex ? true : false
                     focus: true
@@ -262,8 +287,6 @@ Window {
                         if(listText.focus){
                             flag = true
                         }
-
-                        console.log(rowNum.currentIndex)
                     }
                 }
                 MouseArea{
@@ -277,6 +300,8 @@ Window {
                         if(mouse.button == Qt.RightButton){
                             console.log("MouseArea RightButton");
                             menuState.popup()       //显示右键菜单
+                            listContent.currentIndex = index
+                            rowNum.currentIndex = index
                         }
                     }
 
@@ -292,32 +317,13 @@ Window {
                 Menu {
                     id: menuState;
                     MenuItem{
-                        text: "插入";
-                        iconName: "add";
-                        iconSource: "qrc:/images/add.png";
-                        shortcut: StandardKey.New
-                        onTriggered: {
-                            console.log("right add")
-                            modelValue.additem(listContent.currentIndex,"new item")
-                        }
-                    }
-                    MenuItem{
-                        text: "删除";
-                        iconName: "del";
-                        iconSource: "qrc:/images/del.png";
-                        shortcut: StandardKey.Delete
-                        onTriggered: {
-                            console.log("right delete")
-                            msgBoxDel.open()        //调用对话框
-                        }
-                    }
-                    MenuItem{
                         text: "复制";
                         iconName: "copy";
                         iconSource: "qrc:/images/copy.png";
                         shortcut: StandardKey.Copy
                         onTriggered: {
                             console.log("right copy")
+                            copyStr = listText.text
                         }
                     }
                     MenuItem{
@@ -326,7 +332,17 @@ Window {
                         iconSource: "qrc:/images/paste.png";
                         shortcut: StandardKey.Paste
                         onTriggered: {
-                            console.log("right paste")
+                            console.log("right paste", copyStr)
+                            modelValue.pasteItem(listContent.currentIndex,copyStr)
+                        }
+                    }
+                    MenuItem{
+                        text: "删除";
+                        iconName: "del";
+                        iconSource: "qrc:/images/del.png";
+                        shortcut: StandardKey.Delete
+                        onTriggered: {
+                            msgBoxDel.open()        //调用对话框
                         }
                     }
                 }
@@ -344,7 +360,12 @@ Window {
         text: qsTr("确定要删除当前记录？")
         onYes:
         {
+            console.log("right delete",listContent.count,listContent.currentIndex)
             modelValue.removeRow(listContent.currentIndex)
+            if(listContent.currentIndex >= listContent.count-1){
+                listContent.currentIndex = listContent.count-1
+                rowNum.currentIndex = listContent.count-1
+            }
         }
     }
 }
