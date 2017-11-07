@@ -1,5 +1,7 @@
 #include "pstringlistmodel.h"
 
+#include <QDebug>
+
 PStringListModel::PStringListModel(QObject *parent):QStringListModel(parent)
 {
     ModelData tmp;
@@ -91,17 +93,21 @@ void PStringListModel::pasteItem(int row, QString str)
 
 void PStringListModel::modifyItem(int row, QString str)
 {
-    ModelData tmpData;
-    tmpData.rowId = row;
-    tmpData.value = str;
+//    ModelData tmpData;
+//    tmpData.rowId = row;
+//    tmpData.value = str;
 
-    beginResetModel();
-    m_modelList.replace(row, tmpData);
-    endResetModel();
+//    beginResetModel();
+//    m_modelList.replace(row, tmpData);
+//    qDebug() << "modify:::" << m_modelList.at(row).rowId << m_modelList.at(row).value;
+//    endResetModel();
 }
 
 void PStringListModel::findItem(QString str)
 {
+    if(str.isEmpty())
+        return;
+
     tmpModelList = m_modelList;
 
     m_modelList.clear();

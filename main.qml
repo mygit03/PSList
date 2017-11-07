@@ -230,21 +230,6 @@ Window {
             }
         }
 
-        Component {
-            id: sectionHeading
-            Rectangle {
-                width: listContent.width
-                height: 25
-                color: "lightsteelblue"
-
-                Text {
-                    text: section
-                    font.bold: true
-                    font.pixelSize: 20
-                }
-            }
-        }
-
         //列表整体
         ListView{
             id:listContent
@@ -253,9 +238,6 @@ Window {
             anchors.left: rowNum.right
             anchors.right: listRec.right
             currentIndex: 0
-            section.property: "size"
-            section.criteria: ViewSection.FullString
-            section.delegate: sectionHeading
 
             model: modelValue
             delegate: Rectangle{
@@ -288,6 +270,10 @@ Window {
                         if(listText.focus){
                             flag = true
                         }
+                    }
+                    onEditingFinished: {
+                        flag = false
+                        listText.focus = false
                     }
                 }
                 MouseArea{
