@@ -12,9 +12,10 @@ Window {
     height: 500
     title: qsTr("列表组件")
 
-    property var copyStr
-    property color headerColor: "#14ca2c"
-    property color rowColor: "#00CD66"
+    property var copyStr                        //复制文本
+    property color headerColor: "#14ca2c"       //表头背景色
+    property color rowColor: "#EEE8AA"          //Item背景色
+    property int colorFlag: -1                  //表头或Item背景色标识
 
     Rectangle{
         id:containerRec
@@ -176,12 +177,8 @@ Window {
             checkable: false
             text: qsTr("颜色")
             tooltip: text
+            menu: colorMenu
             iconSource:{ source:"qrc:/images/color.png"}//指定按钮图标
-
-            onClicked: {
-                console.log("颜色")
-                colorDialog.open()
-            }
         }
         Text {
             property int cnt: listContent.count
@@ -264,55 +261,60 @@ Window {
                 width: listContent.width
                 height: 25
 
-                color: listContent.currentIndex == index ? "blue" : (index % 2 == 0 ? "#EEE8AA" : "#CDCDB4")
-
-                TextInput{
-                    id:listText
+                Rectangle{
+                    id:txtRec
                     width: listContent.width
                     height: 25
-                    selectByMouse: true         //可以选择文本
-                    text: itemValue             //对应model里的角色是数据
-                    color: listContent.currentIndex == index ? "#DAA520" : "black"
-                    font.pointSize: 15
-                    font.bold: index == listContent.currentIndex ? true : false
-                    focus: true
-                    z:10
-                    horizontalAlignment: TextInput.AlignHCenter
-                    verticalAlignment: TextInput.AlignVCenter
+                    border.color: "black"
+                    color: listContent.currentIndex == index ? "blue" : rowColor
 
-                    property bool flag: false
-                    onActiveFocusChanged: {
-                        console.log("index:",index,listText.focus)
-                        if(!flag){
-                            rowNum.currentIndex = index         //关联两个ListView 选中行同步
-                            listContent.currentIndex = index
-                        }
-                        if(listText.focus){
-                            flag = true
-                        }
-                    }
-                    onEditingFinished: {
-                        flag = false
-                        listText.focus = false
-                    }
-                }
-                MouseArea{
-                    id:mouseArea
-                    anchors.fill: parent
+                    TextInput{
+                        id:listText
+                        anchors.fill: parent
+                        selectByMouse: true         //可以选择文本
+                        text: itemValue             //对应model里的角色是数据
+                        color: listContent.currentIndex == index ? "#DAA520" : "black"
+                        font.pointSize: 15
+                        font.bold: index == listContent.currentIndex ? true : false
+                        focus: true
+                        z:10
+                        horizontalAlignment: TextInput.AlignHCenter
+                        verticalAlignment: TextInput.AlignVCenter
 
-                    //响应右键 实现右键菜单
-                    acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-                    onClicked: {
-                        console.log("click:",index,listContent.currentIndex)
-                        if(listContent.currentIndex != index){
-                            listContent.currentIndex = index;
-                            rowNum.currentIndex = index;
+                        property bool flag: false
+                        onActiveFocusChanged: {
+                            console.log("index:",index,listText.focus)
+                            if(!flag){
+                                rowNum.currentIndex = index         //关联两个ListView 选中行同步
+                                listContent.currentIndex = index
+                            }
+                            if(listText.focus){
+                                flag = true
+                            }
                         }
-                        if(mouse.button == Qt.RightButton){
-                            console.log("MouseArea RightButton");
-                            menuState.popup()       //显示右键菜单
+                        onEditingFinished: {
+                            flag = false
                             listText.focus = false
+                        }
+                    }
+                    MouseArea{
+                        id:mouseArea
+                        anchors.fill: parent
+
+                        //响应右键 实现右键菜单
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                        onClicked: {
+                            console.log("click:",index,listContent.currentIndex)
+                            if(listContent.currentIndex != index){
+                                listContent.currentIndex = index;
+                                rowNum.currentIndex = index;
+                            }
+                            if(mouse.button == Qt.RightButton){
+                                console.log("MouseArea RightButton");
+                                menuState.popup()       //显示右键菜单
+                                listText.focus = false
+                            }
                         }
                     }
                 }
@@ -378,11 +380,40 @@ Window {
         currentColor: headerColor
         onAccepted: {
             console.log("选定颜色: " +colorDialog.color)
-            headerColor = colorDialog.color
+            switch(colorFlag){
+            case 0:
+                rowColor = colorDialog.color
+                break
+            case 1:
+                headerColor = colorDialog.color
+                break
+            default:
+                break
+            }
         }
         onRejected: {
             console.log("取消")
         }
         Component.onCompleted: visible = false          //默认不显示颜色对话框
+    }
+
+    Menu {
+        id: colorMenu;
+        MenuItem{
+            text: "Item背景色";
+            onTriggered: {
+                console.log(text)
+                colorFlag = 0
+                colorDialog.open()
+            }
+        }
+        MenuItem{
+            text: "表头背景色";
+            onTriggered: {
+                console.log(text)
+                colorFlag = 1
+                colorDialog.open()
+            }
+        }
     }
 }
