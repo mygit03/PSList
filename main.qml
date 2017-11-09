@@ -292,6 +292,39 @@ Window {
                         flag = false
                         listText.focus = false
                     }
+                    //菜单
+                    Menu {
+                        id: menuState;
+                        MenuItem{
+                            text: "复制";
+                            iconName: "copy";
+                            iconSource: "qrc:/images/copy.png";
+                            shortcut: StandardKey.Copy
+                            onTriggered: {
+                                console.log("right copy")
+                                copyStr = listText.text
+                            }
+                        }
+                        MenuItem{
+                            text: "粘贴";
+                            iconName: "paste";
+                            iconSource: "qrc:/images/paste.png";
+                            shortcut: StandardKey.Paste
+                            onTriggered: {
+                                console.log("right paste", copyStr)
+                                modelValue.pasteItem(listContent.currentIndex,copyStr)
+                            }
+                        }
+                        MenuItem{
+                            text: "删除";
+                            iconName: "del";
+                            iconSource: "qrc:/images/del.png";
+                            shortcut: StandardKey.Delete
+                            onTriggered: {
+                                msgBoxDel.open()        //调用对话框
+                            }
+                        }
+                    }
                 }
                 MouseArea{
                     id:mouseArea
@@ -311,39 +344,6 @@ Window {
                             menuState.popup()       //显示右键菜单
                             listText.focus = false
                         }
-                    }
-                }
-            }
-            //菜单
-            Menu {
-                id: menuState;
-                MenuItem{
-                    text: "复制";
-                    iconName: "copy";
-                    iconSource: "qrc:/images/copy.png";
-                    shortcut: StandardKey.Copy
-                    onTriggered: {
-                        console.log("right copy")
-                        copyStr = listText.text
-                    }
-                }
-                MenuItem{
-                    text: "粘贴";
-                    iconName: "paste";
-                    iconSource: "qrc:/images/paste.png";
-                    shortcut: StandardKey.Paste
-                    onTriggered: {
-                        console.log("right paste", copyStr)
-                        modelValue.pasteItem(listContent.currentIndex,copyStr)
-                    }
-                }
-                MenuItem{
-                    text: "删除";
-                    iconName: "del";
-                    iconSource: "qrc:/images/del.png";
-                    shortcut: StandardKey.Delete
-                    onTriggered: {
-                        msgBoxDel.open()        //调用对话框
                     }
                 }
             }

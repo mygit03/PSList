@@ -77,6 +77,9 @@ void PStringListModel::removeRow(int row)
 
 void PStringListModel::pasteItem(int row, QString str)
 {
+    if(str.isEmpty())
+        return;
+
     ModelData tmpData;
     tmpData.rowId = row;
     tmpData.value = str;
