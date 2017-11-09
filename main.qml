@@ -8,11 +8,13 @@ import ListModel 1.0                //C++写的model, 1.0是在main函数里注�
 
 Window {
     visible: true
-    width: 640
-    height: 480
+    width: 680
+    height: 500
     title: qsTr("列表组件")
 
     property var copyStr
+    property color headerColor: "#14ca2c"
+    property color rowColor: "#00CD66"
 
     Rectangle{
         id:containerRec
@@ -24,7 +26,7 @@ Window {
         anchors.top: containerRec.top
         width: containerRec.width
         height: 45
-        color: "#66CD00"
+        color: headerColor
 
         ToolButton{
             id:addRec
@@ -71,7 +73,7 @@ Window {
 
             width: 120
             height: 45
-            color: "#66CD00"
+            color: headerColor
 
             ComboBox{
                 id:comBox
@@ -133,7 +135,7 @@ Window {
             anchors.leftMargin: 10
             width: 130
             height: 25
-            color: "#66CD00"
+            color: "white"
             border.color: "black"
 
             TextEdit{
@@ -163,12 +165,30 @@ Window {
                 modelValue.findItem(findText.text)
             }
         }
+        ToolButton{
+            id:colorBtn
+            anchors.top: parent.top
+            anchors.topMargin: 7
+            anchors.left: findBtn.right
+            anchors.leftMargin: 5
+            width: 30
+            height: 30
+            checkable: false
+            text: qsTr("颜色")
+            tooltip: text
+            iconSource:{ source:"qrc:/images/color.png"}//指定按钮图标
+
+            onClicked: {
+                console.log("颜色")
+                colorDialog.open()
+            }
+        }
         Text {
             property int cnt: listContent.count
             id: countRec
             anchors.top: parent.top
             anchors.topMargin: 12
-            anchors.left: findBtn.right
+            anchors.left: colorBtn.right
             anchors.leftMargin: 20
             font.pointSize: 12
             font.bold: true
@@ -205,7 +225,7 @@ Window {
             delegate: Rectangle{
                 height: 25
                 width: 50
-                color: "#00CD66"
+                color: headerColor
 
                 Text {
                     id: idText
@@ -282,21 +302,17 @@ Window {
 
                     //响应右键 实现右键菜单
                     acceptedButtons: Qt.LeftButton | Qt.RightButton
-                    onPressed: {
-                        console.log("onPressed", mouse.button);
-                        if(mouse.button == Qt.RightButton){
-                            console.log("MouseArea RightButton");
-                            menuState.popup()       //显示右键菜单
-                            listContent.currentIndex = index
-                            rowNum.currentIndex = index
-                        }
-                    }
 
                     onClicked: {
                         console.log("click:",index,listContent.currentIndex)
                         if(listContent.currentIndex != index){
                             listContent.currentIndex = index;
                             rowNum.currentIndex = index;
+                        }
+                        if(mouse.button == Qt.RightButton){
+                            console.log("MouseArea RightButton");
+                            menuState.popup()       //显示右键菜单
+                            listText.focus = false
                         }
                     }
                 }
@@ -354,5 +370,19 @@ Window {
                 rowNum.currentIndex = listContent.count-1
             }
         }
+    }
+
+    ColorDialog{
+        id: colorDialog
+        title: qsTr("颜色对话框")
+        currentColor: headerColor
+        onAccepted: {
+            console.log("选定颜色: " +colorDialog.color)
+            headerColor = colorDialog.color
+        }
+        onRejected: {
+            console.log("取消")
+        }
+        Component.onCompleted: visible = false          //默认不显示颜色对话框
     }
 }
