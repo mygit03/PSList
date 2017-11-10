@@ -149,6 +149,11 @@ void PStringListModel::sortItem()
 
 void PStringListModel::move(int from, int to)
 {
+    if(to < 0 || to >= m_modelList.count()){
+        qDebug() << "out of the area!";
+        return;
+    }
+
     beginResetModel();
     m_modelList.move(from, to);
 
