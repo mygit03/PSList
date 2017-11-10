@@ -277,20 +277,9 @@ Window {
                     horizontalAlignment: TextInput.AlignHCenter
                     verticalAlignment: TextInput.AlignVCenter
 
-                    property bool flag: false
-                    onActiveFocusChanged: {
-                        console.log("index:",index,listText.focus)
-                        if(!flag){
-                            rowNum.currentIndex = index         //关联两个ListView 选中行同步
-                            listContent.currentIndex = index
-                        }
-                        if(listText.focus){
-                            flag = true
-                        }
-                    }
                     onEditingFinished: {
-                        flag = false
                         listText.focus = false
+                        modelValue.modifyItem(index, text)
                     }
                     //菜单
                     Menu {
@@ -325,24 +314,27 @@ Window {
                             }
                         }
                     }
-                }
-                MouseArea{
-                    id:mouseArea
-                    anchors.fill: parent
+                    MouseArea{
+                        id:mouseArea
+                        anchors.fill: parent
 
-                    //响应右键 实现右键菜单
-                    acceptedButtons: Qt.LeftButton | Qt.RightButton
+                        //响应右键 实现右键菜单
+                        acceptedButtons: Qt.LeftButton | Qt.RightButton
 
-                    onClicked: {
-                        console.log("click:",index,listContent.currentIndex)
-                        if(listContent.currentIndex != index){
-                            listContent.currentIndex = index;
-                            rowNum.currentIndex = index;
-                        }
-                        if(mouse.button == Qt.RightButton){
-                            console.log("MouseArea RightButton");
-                            menuState.popup()       //显示右键菜单
+                        onClicked: {
+                            console.log("click:",index,listContent.currentIndex)
+                            if(listContent.currentIndex != index){
+                                listContent.currentIndex = index;
+                                rowNum.currentIndex = index;
+                            }
+                            if(mouse.button == Qt.RightButton){
+                                console.log("MouseArea RightButton");
+                                menuState.popup()       //显示右键菜单
+                            }
                             listText.focus = false
+                        }
+                        onDoubleClicked: {
+                            listText.forceActiveFocus()
                         }
                     }
                 }

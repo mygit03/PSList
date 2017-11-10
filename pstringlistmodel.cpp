@@ -96,14 +96,12 @@ void PStringListModel::pasteItem(int row, QString str)
 
 void PStringListModel::modifyItem(int row, QString str)
 {
-//    ModelData tmpData;
-//    tmpData.rowId = row;
-//    tmpData.value = str;
+    ModelData tmpData;
+    tmpData.rowId = row + 1;
+    tmpData.value = str;
 
-//    beginResetModel();
-//    m_modelList.replace(row, tmpData);
-//    qDebug() << "modify:::" << m_modelList.at(row).rowId << m_modelList.at(row).value;
-//    endResetModel();
+    m_modelList.replace(row, tmpData);
+    qDebug() << "modify:::" << m_modelList.at(row).rowId << m_modelList.at(row).value;
 }
 
 void PStringListModel::findItem(QString str)
