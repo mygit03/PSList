@@ -259,6 +259,7 @@ Window {
 
             model: modelValue
             delegate: Rectangle{
+                id: wrapper
                 width: listContent.width
                 height: 25
                 border.color: "black"
@@ -335,6 +336,20 @@ Window {
                         }
                         onDoubleClicked: {
                             listText.forceActiveFocus()
+                        }
+                        onMouseXChanged: {
+                            var pore = listContent.indexAt(mouseArea.mouseX + wrapper.x, mouseArea.mouseY + wrapper.y);
+                            if( index != pore ) {
+                                modelValue.move(index, pore)
+                            }
+                            console.log("moveX")
+                        }
+                        onMouseYChanged: {
+                            var pore = listContent.indexAt(mouseArea.mouseX + wrapper.x, mouseArea.mouseY + wrapper.y);
+                            if(index != pore) {
+                                modelValue.move(index, pore)
+                            }
+                            console.log("moveY")
                         }
                     }
                 }

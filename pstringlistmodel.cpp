@@ -146,3 +146,16 @@ void PStringListModel::sortItem()
     }
     endResetModel();
 }
+
+void PStringListModel::move(int from, int to)
+{
+    beginResetModel();
+    m_modelList.move(from, to);
+
+    for(int i = 0; i < m_modelList.count(); ++i){
+        ModelData modelValue = m_modelList.at(i);
+        modelValue.rowId = i + 1;
+        m_modelList.replace(i, modelValue);
+    }
+    endResetModel();
+}

@@ -39,6 +39,8 @@ public:
 
     Q_INVOKABLE void sortItem();
 
+    Q_INVOKABLE void move(int from, int to);
+
 
     QList<ModelData> m_modelList;
     QList<ModelData> tmpModelList;
