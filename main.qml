@@ -194,7 +194,7 @@ Window {
             font.bold: true
             horizontalAlignment: Text.AlignHCenter
             verticalAlignment: Text.AlignVCenter
-            text: qsTr("共计 ") + cnt + qsTr(" 条记录")
+            text: qsTr("共计 <font color=\"#4169E1\">") + cnt + qsTr("</font> 条记录")
         }
     }
 
