@@ -9,5 +9,6 @@
         <file>images/paste.png</file>
         <file>images/del.png</file>
         <file>images/color.png</file>
+        <file>images/triangle.png</file>
     </qresource>
 </RCC>

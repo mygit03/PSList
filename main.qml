@@ -17,6 +17,8 @@ Window {
     property color headerColor: "#14ca2c"       //表头背景色
     property color rowColor: "#EEE8AA"          //Item背景色
     property int colorFlag: -1                  //表头或Item背景色标识
+    property int xBtn: rowRec.x + 50            //三角按钮的x坐标
+    property int yBtn: rowNum.currentItem.y + 5 //三角按钮的y坐标
 
     Rectangle{
         id:containerRec
@@ -208,148 +210,200 @@ Window {
             id:modelValue
         }
         //行号
-        ListView{
-            id:rowNum
+        Rectangle{
+            id: rowRec
             anchors.top: listRec.top
             anchors.left: listRec.left
             anchors.bottom: listRec.bottom
-            width: 50
-            height: listRec.height
+            width: 60
+            color: headerColor
 
-            model: modelValue
-            activeFocusOnTab: true
-            highlight: Rectangle{color: "lightsteelblue";radius: 5}
-            focus: true
-            delegate: Rectangle{
-                height: 25
+            ScrollView{
+                id: scrollBarId
+                anchors.top: rowRec.top
+                anchors.left: rowRec.left
+                anchors.bottom: rowRec.bottom
                 width: 50
-                color: headerColor
+                height: rowRec.height
+                verticalScrollBarPolicy: Qt.ScrollBarAlwaysOff
 
-                Text {
-                    id: idText
-                    width: 45
-                    text: itemNum       //对应model里的角色是行号
-                    font.pointSize: 15
-                    font.bold: index == rowNum.currentIndex ? true : false
-                    color: index == rowNum.currentIndex ? "#EE0000" : "black"
 
-                    verticalAlignment: Text.AlignVCenter
-                    horizontalAlignment: Text.AlignRight
-                    MouseArea{
-                        anchors.fill: parent
-                        onClicked: {
-                            if(rowNum.currentIndex != index){
-                                rowNum.currentIndex = index;
-                                listContent.currentIndex = index;
+                ListView{
+                    id:rowNum
+                    anchors.fill: parent
+                    width: 50
+                    height: listRec.height
+
+                    model: modelValue
+                    activeFocusOnTab: true
+                    highlight: Rectangle{color: "lightsteelblue";radius: 5}
+                    focus: true
+                    delegate: Rectangle{
+                        height: 25
+                        width: 50
+                        color: headerColor
+
+                        Text {
+                            id: idText
+                            width: 45
+                            text: itemNum       //对应model里的角色是行号
+                            font.pointSize: 15
+                            font.bold: index == rowNum.currentIndex ? true : false
+                            color: index == rowNum.currentIndex ? "#EE0000" : "black"
+
+                            verticalAlignment: Text.AlignVCenter
+                            horizontalAlignment: Text.AlignRight
+                            MouseArea{
+                                anchors.fill: parent
+                                onClicked: {
+                                    if(rowNum.currentIndex != index){
+                                        rowNum.currentIndex = index;
+                                        listContent.currentIndex = index;
+                                    }
+                                }
                             }
                         }
                     }
                 }
             }
+            ToolButton{
+                id:triangleBtn
+                x: xBtn
+                y: yBtn
+                width: 10
+                height: 10
+                checkable: false
+                text: qsTr("三角")
+                tooltip: text
+                iconSource:{ source:"qrc:/images/triangle.png"}//指定按钮图标
+
+                onClicked: {
+                    console.log("三角")
+                    visible = false
+                }
+            }
         }
 
         //列表整体
-        ListView{
-            id:listContent
+        ScrollView{
+            id: scrollBarList
             anchors.top: listRec.top
             anchors.bottom: listRec.bottom
-            anchors.left: rowNum.right
+            anchors.left: rowRec.right
             anchors.right: listRec.right
-            currentIndex: 0
 
-            model: modelValue
-            delegate: Rectangle{
-                id: wrapper
-                width: listContent.width
-                height: 25
-                border.color: "black"
-                color: listContent.currentIndex == index ? "blue" : rowColor
+            onYChanged: {
+                console.log("top changed")
+                console.log(scrollBarList.height,scrollBarList.top,scrollBarList.y)
+            }
 
-                TextInput{
-                    id:listText
-                    anchors.fill: parent
-                    selectByMouse: true         //可以选择文本
-                    text: itemValue             //对应model里的角色是数据
-                    color: listContent.currentIndex == index ? "#DAA520" : "black"
-                    font.pointSize: 15
-                    font.bold: index == listContent.currentIndex ? true : false
-                    focus: true
-                    z:10
-                    horizontalAlignment: TextInput.AlignHCenter
-                    verticalAlignment: TextInput.AlignVCenter
+            ListView{
+                id:listContent
+                anchors.fill: parent
+                currentIndex: 0
 
-                    onEditingFinished: {
-                        listText.focus = false
-                        modelValue.modifyItem(index, text)
-                    }
-                    //菜单
-                    Menu {
-                        id: menuState;
-                        MenuItem{
-                            text: "复制";
-                            iconName: "copy";
-                            iconSource: "qrc:/images/copy.png";
-                            shortcut: StandardKey.Copy
-                            onTriggered: {
-                                console.log("right copy")
-                                copyStr = listText.text
-                            }
-                        }
-                        MenuItem{
-                            text: "粘贴";
-                            iconName: "paste";
-                            iconSource: "qrc:/images/paste.png";
-                            shortcut: StandardKey.Paste
-                            onTriggered: {
-                                console.log("right paste", copyStr)
-                                modelValue.pasteItem(listContent.currentIndex,copyStr)
-                            }
-                        }
-                        MenuItem{
-                            text: "删除";
-                            iconName: "del";
-                            iconSource: "qrc:/images/del.png";
-                            shortcut: StandardKey.Delete
-                            onTriggered: {
-                                msgBoxDel.open()        //调用对话框
-                            }
-                        }
-                    }
-                    MouseArea{
-                        id:mouseArea
+                model: modelValue
+                delegate: Rectangle{
+                    id: wrapper
+                    width: listContent.width
+                    height: 25
+                    border.color: "black"
+                    color: listContent.currentIndex == index ? "blue" : rowColor
+
+                    TextInput{
+                        id:listText
                         anchors.fill: parent
+                        selectByMouse: true         //可以选择文本
+                        text: itemValue             //对应model里的角色是数据
+                        color: listContent.currentIndex == index ? "#DAA520" : "black"
+                        font.pointSize: 15
+                        font.bold: index == listContent.currentIndex ? true : false
+                        focus: true
+                        z:10
+                        horizontalAlignment: TextInput.AlignHCenter
+                        verticalAlignment: TextInput.AlignVCenter
 
-                        //响应右键 实现右键菜单
-                        acceptedButtons: Qt.LeftButton | Qt.RightButton
-
-                        onClicked: {
-                            console.log("click:",index,listContent.currentIndex)
-                            if(listContent.currentIndex != index){
-                                listContent.currentIndex = index;
-                                rowNum.currentIndex = index;
-                            }
-                            if(mouse.button == Qt.RightButton){
-                                console.log("MouseArea RightButton");
-                                menuState.popup()       //显示右键菜单
-                            }
+                        onEditingFinished: {
                             listText.focus = false
+                            modelValue.modifyItem(index, text)
                         }
-                        onDoubleClicked: {
-                            listText.forceActiveFocus()
-                        }
-                        onMouseXChanged: {
-                            var pore = listContent.indexAt(mouseArea.mouseX + wrapper.x, mouseArea.mouseY + wrapper.y);
-                            if( index != pore ) {
-                                modelValue.move(index, pore)
+                        //菜单
+                        Menu {
+                            id: menuState;
+                            MenuItem{
+                                text: "复制";
+                                iconName: "copy";
+                                iconSource: "qrc:/images/copy.png";
+                                shortcut: StandardKey.Copy
+                                onTriggered: {
+                                    console.log("right copy")
+                                    copyStr = listText.text
+                                }
                             }
-                            console.log("moveX")
-                        }
-                        onMouseYChanged: {
-                            var pore = listContent.indexAt(mouseArea.mouseX + wrapper.x, mouseArea.mouseY + wrapper.y);
-                            if(index != pore) {
-                                modelValue.move(index, pore)
+                            MenuItem{
+                                text: "粘贴";
+                                iconName: "paste";
+                                iconSource: "qrc:/images/paste.png";
+                                shortcut: StandardKey.Paste
+                                onTriggered: {
+                                    console.log("right paste", copyStr)
+                                    modelValue.pasteItem(listContent.currentIndex,copyStr)
+                                }
                             }
-                            console.log("moveY")
+                            MenuItem{
+                                text: "删除";
+                                iconName: "del";
+                                iconSource: "qrc:/images/del.png";
+                                shortcut: StandardKey.Delete
+                                onTriggered: {
+                                    msgBoxDel.open()        //调用对话框
+                                }
+                            }
+                            MenuItem{
+                                text: "注释";
+                                iconName: "Comments";
+                                iconSource: "qrc:/images/del.png";
+                                onTriggered: {
+                                    triangleBtn.visible = true
+                                }
+                            }
+                        }
+                        MouseArea{
+                            id:mouseArea
+                            anchors.fill: parent
+
+                            //响应右键 实现右键菜单
+                            acceptedButtons: Qt.LeftButton | Qt.RightButton
+
+                            onClicked: {
+                                console.log("click:",index,listContent.currentIndex)
+                                if(listContent.currentIndex != index){
+                                    listContent.currentIndex = index;
+                                    rowNum.currentIndex = index;
+                                }
+                                if(mouse.button == Qt.RightButton){
+                                    console.log("MouseArea RightButton");
+                                    menuState.popup()       //显示右键菜单
+                                }
+                                listText.focus = false
+                            }
+                            onDoubleClicked: {
+                                listText.forceActiveFocus()
+                            }
+                            onMouseXChanged: {
+                                var pore = listContent.indexAt(mouseArea.mouseX + wrapper.x, mouseArea.mouseY + wrapper.y);
+                                if( index != pore ) {
+                                    modelValue.move(index, pore)
+                                }
+                                console.log("moveX")
+                            }
+                            onMouseYChanged: {
+                                var pore = listContent.indexAt(mouseArea.mouseX + wrapper.x, mouseArea.mouseY + wrapper.y);
+                                if(index != pore) {
+                                    modelValue.move(index, pore)
+                                }
+                                console.log("moveY")
+                            }
                         }
                     }
                 }
