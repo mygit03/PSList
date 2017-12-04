@@ -10,5 +10,8 @@
         <file>images/del.png</file>
         <file>images/color.png</file>
         <file>images/triangle.png</file>
+        <file>ListHeader.qml</file>
+        <file>RowNumber.qml</file>
+        <file>MyListView.qml</file>
     </qresource>
 </RCC>

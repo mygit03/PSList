@@ -164,3 +164,26 @@ void PStringListModel::move(int from, int to)
     }
     endResetModel();
 }
+
+void PStringListModel::hide(int row)
+{
+    beginResetModel();
+    ModelData tmpData = m_modelList.at(row);
+    dataList.clear();
+    dataList.append(tmpData);
+    m_modelList.removeAt(row);
+    qDebug() << "hide:" << dataList.at(0).value << tmpData.rowId;;
+    endResetModel();
+}
+
+void PStringListModel::show()
+{
+    beginResetModel();
+    for(int i = 0; i < dataList.count(); ++i){
+        ModelData tmpData = dataList.at(i);
+        m_modelList.insert(tmpData.rowId-1, tmpData);
+        qDebug() << tmpData.rowId;
+    }
+    qDebug() << "show:" << dataList.at(0).value;
+    endResetModel();
+}
