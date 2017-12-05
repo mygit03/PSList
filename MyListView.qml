@@ -8,6 +8,9 @@ Rectangle{
     anchors.right: containerRec.right
     anchors.bottom: containerRec.bottom
 
+    property alias textList: listContent
+    property alias rowList: rowid
+
     //行号组件
     RowNumber{
         id: rowid
@@ -99,7 +102,7 @@ Rectangle{
                             iconSource: "qrc:/images/del.png";
                             onTriggered: {
                                 console.log(listContent.currentIndex)
-                                rowid.showTriangleBtn()
+                                rowid.showTriangleBtn()     //显示三角按钮
                                 modelValue.hide(listContent.currentIndex,1)
                             }
                         }
@@ -115,6 +118,7 @@ Rectangle{
                             console.log("click:",index,listContent.currentIndex)
                             if(listContent.currentIndex != index){
                                 listContent.currentIndex = index;
+                                rowid.rowList.currentIndex = index
                             }
                             if(mouse.button == Qt.RightButton){
                                 console.log("MouseArea RightButton");

@@ -15,10 +15,11 @@ Rectangle{
         iconSource:{ source:"qrc:/images/add.png"}//指定按钮图标
 
         onClicked: {
-            console.log("添加:",listContent.count)
-            modelValue.additem(listContent.count+1, "new item");
-            listContent.currentIndex = listContent.count-1
-            rowNum.currentIndex = listContent.count-1
+            console.log("添加:",modelValue.rowCount())
+            modelValue.additem(modelValue.rowCount()+1, "new item");
+            countRec.cnt = modelValue.rowCount()
+            myList.textList.currentIndex = myList.textList.count - 1
+            myList.rowList.rowList.currentIndex = myList.rowList.rowList.count - 1
         }
     }
 
@@ -154,6 +155,7 @@ Rectangle{
         iconSource:{ source:"qrc:/images/color.png"}//指定按钮图标
     }
     Text {
+        property int cnt: modelValue.rowCount()
         id: countRec
         anchors.top: parent.top
         anchors.topMargin: 12

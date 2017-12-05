@@ -2,8 +2,9 @@ import QtQuick 2.7
 import QtQuick.Controls 1.4
 
 Rectangle{
+    property alias rowList: rowNum
+
     id: rowRec
-    property alias tBtn: triangleBtn.visible
     ScrollView{
         id: scrollBarId
         anchors.top: parent.top

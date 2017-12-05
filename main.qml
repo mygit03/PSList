@@ -17,7 +17,7 @@ Window {
     property color headerColor: "#14ca2c"       //表头背景色
     property color rowColor: "#EEE8AA"          //Item背景色
     property int colorFlag: -1                  //表头或Item背景色标识
-    property int cnt: modelValue.rowCount()
+
     Rectangle{
         id:containerRec
         anchors.fill: parent
