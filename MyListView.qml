@@ -1,5 +1,6 @@
 import QtQuick 2.7
 import QtQuick.Controls 1.4
+import "JsFunc.js" as MyFunc
 
 Rectangle{
     id:listRec
@@ -10,6 +11,8 @@ Rectangle{
 
     property alias textList: listContent
     property alias rowList: rowid
+    property var selectList: new Array
+    property int yPos: 0
 
     //行号组件
     RowNumber{
@@ -28,11 +31,6 @@ Rectangle{
         anchors.bottom: parent.bottom
         anchors.left: rowid.right
         anchors.right: parent.right
-
-        onYChanged: {
-            console.log("top changed")
-            console.log(scrollBarList.height,scrollBarList.top,scrollBarList.y)
-        }
 
         ListView{
             id:listContent
@@ -101,12 +99,14 @@ Rectangle{
                             iconName: "hide";
                             iconSource: "qrc:/images/del.png";
                             onTriggered: {
+                                yPos = listContent.currentItem.y-20
                                 console.log(listContent.currentIndex)
-                                rowid.showTriangleBtn()     //显示三角按钮
-                                modelValue.hide(listContent.currentIndex,1)
+                                rowid.showTriangleBtn(yPos)     //显示三角按钮
+                                modelValue.hide(yPos,listContent.currentIndex,1)
                             }
                         }
                     }
+
                     MouseArea{
                         id:mouseArea
                         anchors.fill: parent

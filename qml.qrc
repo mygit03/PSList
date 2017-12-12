@@ -13,5 +13,7 @@
         <file>ListHeader.qml</file>
         <file>RowNumber.qml</file>
         <file>MyListView.qml</file>
+        <file>ToolBtnDefined.qml</file>
+        <file>JsFunc.js</file>
     </qresource>
 </RCC>

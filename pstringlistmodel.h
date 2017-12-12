@@ -41,14 +41,14 @@ public:
 
     Q_INVOKABLE void move(int from, int to);
 
-    Q_INVOKABLE void hide(int row);
+    Q_INVOKABLE void hide(int yPos, int row);
 
-    Q_INVOKABLE void show();
+    Q_INVOKABLE void show(int yPos);
 
 
     QList<ModelData> m_modelList;
     QList<ModelData> tmpModelList;
-    QList<ModelData> dataList;
+    QMap<int,ModelData> mapDataList;
 };
 
 #endif // PSTRINGLISTMODEL_H

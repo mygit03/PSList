@@ -165,25 +165,24 @@ void PStringListModel::move(int from, int to)
     endResetModel();
 }
 
-void PStringListModel::hide(int row)
+void PStringListModel::hide(int yPos,int row)
 {
     beginResetModel();
     ModelData tmpData = m_modelList.at(row);
-    dataList.clear();
-    dataList.append(tmpData);
+    mapDataList.insert(yPos, tmpData);
     m_modelList.removeAt(row);
-    qDebug() << "hide:" << dataList.at(0).value << tmpData.rowId;;
     endResetModel();
 }
 
-void PStringListModel::show()
+void PStringListModel::show(int yPos)
 {
     beginResetModel();
-    for(int i = 0; i < dataList.count(); ++i){
-        ModelData tmpData = dataList.at(i);
-        m_modelList.insert(tmpData.rowId-1, tmpData);
-        qDebug() << tmpData.rowId;
+    QMap<int,ModelData>::iterator it = mapDataList.begin();     //遍历map
+    for(; it != mapDataList.end(); ++it){
+        if(it.key() == yPos){
+            ModelData tmpData = it.value();
+            m_modelList.insert(tmpData.rowId-1, tmpData);
+        }
     }
-    qDebug() << "show:" << dataList.at(0).value;
     endResetModel();
 }

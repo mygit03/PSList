@@ -1,8 +1,11 @@
 import QtQuick 2.7
 import QtQuick.Controls 1.4
 
+import "JsFunc.js" as MyJsFunc
+
 Rectangle{
     property alias rowList: rowNum
+    property Component component: null
 
     id: rowRec
     ScrollView{
@@ -53,26 +56,8 @@ Rectangle{
             }
         }
     }
-    ToolButton{
-        id:triangleBtn
-        x: parent.x + 50
-        y: listContent.currentIndex == 0 ? (listContent.currentItem.y + 5) : (listContent.currentItem.y - 25 + 5)
-        width: 10
-        height: 10
-        visible: false
-        checkable: false
-        text: qsTr("三角")
-        tooltip: text
-        iconSource:{ source:"qrc:/images/triangle.png"}//指定按钮图标
 
-        onClicked: {
-            console.log("三角")
-            visible = false
-            modelValue.show()
-        }
-    }
-
-    function showTriangleBtn(){
-        triangleBtn.visible = true
+    function showTriangleBtn(yPos){
+        MyJsFunc.createTriangleBtn(rowNum.currentItem.x+50,yPos)
     }
 }
