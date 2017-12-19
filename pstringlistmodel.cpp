@@ -184,5 +184,16 @@ void PStringListModel::show(int yPos)
             m_modelList.insert(tmpData.rowId-1, tmpData);
         }
     }
+    //排序
+    for(int i = 0; i < m_modelList.count(); ++i){
+        for(int j = 0; j < m_modelList.count()-1; ++j){
+            ModelData data1 = m_modelList.at(j);
+            ModelData data2 = m_modelList.at(j+1);
+            if(data1.rowId > data2.rowId){
+                m_modelList.swap(j,j+1);
+                qDebug() << data1.rowId << data2.rowId << "dafaeeef";
+            }
+        }
+    }
     endResetModel();
 }
