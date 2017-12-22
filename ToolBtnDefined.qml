@@ -4,9 +4,10 @@ import QtQuick.Controls 1.4
 ToolButton{
     property alias flag: triangleBtn.visible
 
+    signal toolCliked(var yPos);
+
     id:triangleBtn
     x: 50
-    y: listContent.currentIndex == 0 ? (listContent.currentItem.y + 5) : (listContent.currentItem.y - 25 + 5)
     width: 10
     height: 10
     visible: true
@@ -20,8 +21,11 @@ ToolButton{
     }
 
     onClicked: {
-        console.log("三角")
+        console.log("三角",triangleBtn.y)
         visible = false
         modelValue.show(triangleBtn.y)
+
+        //发射信号
+        toolCliked(triangleBtn.y);
     }
 }

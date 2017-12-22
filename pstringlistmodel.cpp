@@ -171,6 +171,22 @@ void PStringListModel::hide(int yPos,int row)
     ModelData tmpData = m_modelList.at(row);
     mapDataList.insert(yPos, tmpData);
     m_modelList.removeAt(row);
+    QList<int> keyList;
+    keyList.clear();
+    QMap<int,ModelData>::iterator it = mapDataList.begin();
+    for(; it != mapDataList.end(); ++it){
+        if(it.key() > yPos){
+            mapDataList.insert(it.key() - 25, it.value());
+            keyList.append(it.key());
+        }
+    }
+    for(int i = 0; i < keyList.count(); ++ i){
+        mapDataList.remove(keyList.at(i));
+    }
+    it = mapDataList.begin();
+    for(; it != mapDataList.end(); ++it){
+        qDebug() << "it.key:" << it.key();
+    }
     endResetModel();
 }
 
@@ -182,8 +198,22 @@ void PStringListModel::show(int yPos)
         if(it.key() == yPos){
             ModelData tmpData = it.value();
             m_modelList.insert(tmpData.rowId-1, tmpData);
+            mapDataList.remove(it.key());
+            break;
         }
     }
+
+    QMap<int,ModelData> tmpList = mapDataList;
+    mapDataList.clear();
+    QMap<int,ModelData>::iterator ite = tmpList.begin();
+    for(; ite != tmpList.end(); ++ite){
+        if(ite.key() > yPos){
+            mapDataList.insert(ite.key() + 25, ite.value());
+            continue;
+        }
+        mapDataList.insert(ite.key(), ite.value());
+    }
+
     //排序
     for(int i = 0; i < m_modelList.count(); ++i){
         for(int j = 0; j < m_modelList.count()-1; ++j){

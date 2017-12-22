@@ -13,6 +13,7 @@ Rectangle{
     property alias rowList: rowid
     property var selectList: new Array
     property int yPos: 0
+    property var tooBtnArr: new Array
 
     //行号组件
     RowNumber{
@@ -102,7 +103,14 @@ Rectangle{
                                 yPos = listContent.currentItem.y-20
                                 console.log(listContent.currentIndex)
                                 rowid.showTriangleBtn(yPos)     //显示三角按钮
-                                modelValue.hide(yPos,listContent.currentIndex,1)
+                                console.log("len:",tooBtnArr.length)
+                                for(var i = 0; i < tooBtnArr.length; ++i){
+                                    console.log("tBtn.y:"+tooBtnArr[i].y,yPos)
+                                    if(tooBtnArr[i].y > yPos){
+                                        tooBtnArr[i].y -= 25
+                                    }
+                                }
+                                modelValue.hide(yPos,listContent.currentIndex)
                             }
                         }
                     }

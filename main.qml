@@ -55,11 +55,11 @@ Window {
         text: qsTr("确定要删除当前记录？")
         onYes:
         {
-            console.log("right delete",listContent.count,listContent.currentIndex)
-            modelValue.removeRow(listContent.currentIndex)
-            if(listContent.currentIndex >= listContent.count-1){
-                listContent.currentIndex = listContent.count-1
-                rowNum.currentIndex = listContent.count-1
+            console.log("right delete",myList.textList.count,myList.textList.currentIndex)
+            modelValue.removeRow(myList.textList.currentIndex)
+            if(myList.textList.currentIndex >= myList.textList.count-1){
+                myList.textList.currentIndex = myList.textList.count-1
+                myList.rowList.rowList.currentIndex = myList.textList.count-1
             }
         }
     }
