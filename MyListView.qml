@@ -11,9 +11,9 @@ Rectangle{
 
     property alias textList: listContent
     property alias rowList: rowid
-    property var selectList: new Array
     property int yPos: 0
-    property var tooBtnArr: new Array
+    property var selectArr: new Array               //选中行数组
+    property var toolBtnArr: new Array              //隐藏行时显示的三角按钮数组
 
     //行号组件
     RowNumber{
@@ -103,11 +103,11 @@ Rectangle{
                                 yPos = listContent.currentItem.y-20
                                 console.log(listContent.currentIndex)
                                 rowid.showTriangleBtn(yPos)     //显示三角按钮
-                                console.log("len:",tooBtnArr.length)
-                                for(var i = 0; i < tooBtnArr.length; ++i){
-                                    console.log("tBtn.y:"+tooBtnArr[i].y,yPos)
-                                    if(tooBtnArr[i].y > yPos){
-                                        tooBtnArr[i].y -= 25
+                                console.log("len:",toolBtnArr.length)
+                                for(var i = 0; i < toolBtnArr.length; ++i){
+                                    console.log("tBtn.y:"+toolBtnArr[i].y,yPos)
+                                    if(toolBtnArr[i].y > yPos){
+                                        toolBtnArr[i].y -= 25
                                     }
                                 }
                                 modelValue.hide(yPos,listContent.currentIndex)
